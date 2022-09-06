@@ -1,7 +1,7 @@
 from rest_framework import generics,status
 from rest_framework import serializers
 from myapi.models import User
-from myapi.serializers import LoginResponseSerializer, LoginSerializer, RegisterUserSerializer
+from myapi.serializers import LoginResponseSerializer, LoginSerializer, RegisterUserSerializer, ResetUserSerializer
 from rest_framework.response import Response
 from django.contrib import auth
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -77,3 +77,20 @@ class LoginView(generics.CreateAPIView):
             data=serialized_data.data,
             status=status.HTTP_200_OK
         )
+
+
+class ResetPasswordAPIView(generics.CreateAPIView):
+    serializer_class = ResetUserSerializer
+    user_service = UserService()
+
+    def post(self, request, *args, **kwargs):
+        try:
+            serializer = self.serializer_class(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            data = serializer.data
+            code = self.user_service.reset_user(email=data.get('email'))
+            return Response(
+                {'message': 'Reset code sent successfully. Please check your email', 'code': code},
+                status=status.HTTP_201_CREATED)
+        except Exception as err:
+            return Response(err.args[0], status=status.HTTP_400_BAD_REQUEST)
