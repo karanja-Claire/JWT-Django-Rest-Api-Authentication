@@ -6,15 +6,19 @@ from rest_framework.response import Response
 from django.contrib import auth
 from rest_framework_simplejwt.tokens import RefreshToken
 
+from myapi.services.authentication_services import UserService
+
 class RegisterView(generics.CreateAPIView):
     serializer_class = RegisterUserSerializer
-
+    user_service = UserService()
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(
             data=request.data
         )
         serializer.is_valid(raise_exception=True)
         data = serializer.data
+        
+        self.user_service.register_user(data)
         user = User.objects.create_user(
             username = data.get('first_name')+ " "+data.get('last_name'),
             first_name=data.get('first_name'),

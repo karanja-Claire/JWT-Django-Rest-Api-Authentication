@@ -11,6 +11,11 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
+import environ
+
+env = environ.Env()
+environ.Env.read_env()
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -145,3 +150,13 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+
+EMAIL_HOST = env.get_value('EMAIL_HOST')
+EMAIL_HOST_USER = env.get_value('EMAIL_HOST_USER')
+EMAIL_USE_TLS = env.get_value('EMAIL_USE_TLS')
+DEFAULT_FROM_EMAIL = env.get_value('DEFAULT_FROM_EMAIL')
+EMAIL_PORT = env.get_value('EMAIL_PORT')
+EMAIL_HOST_PASSWORD = env.get_value('EMAIL_HOST_PASSWORD')
+

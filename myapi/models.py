@@ -49,3 +49,13 @@ class User(AbstractUser, PermissionsMixin):
     REQUIRED_FIELDS = ['first_name','last_name']
     
     objects = UserManager()
+
+
+class Code(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(User, to_field='id', on_delete=CASCADE)
+    code = models.CharField(max_length=10)
+    expiry = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
