@@ -18,7 +18,7 @@ class RegisterView(generics.CreateAPIView):
         serializer.is_valid(raise_exception=True)
         data = serializer.data
         
-        self.user_service.register_user(data)
+       
         user = User.objects.create_user(
             username = data.get('first_name')+ " "+data.get('last_name'),
             first_name=data.get('first_name'),
@@ -26,7 +26,14 @@ class RegisterView(generics.CreateAPIView):
             email = data.get('email'),
             password = data.get('password')
         )
+       
+        this_user = user.id
+        print(user.id)
+        email_subject = 'Activate your Account'
+        email_body = 'Your activation code is '
+        self.user_service.send_verification_email(email_subject, email_body, user)
         serialized_data = self.serializer_class(user)
+        print(serialized_data)
         return Response(
             data=serialized_data.data,
             status=status.HTTP_201_CREATED
