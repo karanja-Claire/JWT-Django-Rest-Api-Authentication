@@ -30,3 +30,10 @@ class RegisterUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['first_name','last_name', 'email', 'password']
+
+
+class ResetUserSerializer(serializers.Serializer):
+    email = serializers.EmailField(max_length=256)
+
+    class Meta:
+        fields = ['email']

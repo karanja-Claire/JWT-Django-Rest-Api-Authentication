@@ -36,9 +36,12 @@ class UserService:
         Email.send(email_subject, email_body, [user.email])
         return activate_code
 
-    # def register_user(self, kwargs):
-    #     user = User.objects.create_user(**kwargs)
-    #     email_subject = 'Activate your Account'
-    #     email_body = 'Your activation code is '
-    #     self.send_verification_email(email_subject, email_body, user)
-    #     return user
+    def reset_user(self, email):
+            try:
+                user = User.objects.get(email=email)
+                email_subject = 'Reset your password'
+                email_body = 'Your account reset code is '
+                code = self.send_verification_email(email_subject, email_body, user)
+                return code
+            except User.DoesNotExist:
+                raise Exception(self.user_errors.raise_invalid_email())
